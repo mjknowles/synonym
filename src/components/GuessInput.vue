@@ -2,18 +2,20 @@
 import { ref } from "vue";
 
 const emit = defineEmits(["guessEntered"]);
-const answer = ref("");
+const guess = ref("");
 
 function guessEntered() {
-  emit("guessEntered", answer.value);
+  emit("guessEntered", guess.value);
+  guess.value = "";
 }
 </script>
 
 <template>
-  Answer:
+  <label for="guess">Your Guess:</label>
   <input
-    v-model="answer"
+    v-model="guess"
     placeholder="Press enter to submit"
+    id="guess"
     @keyup.enter="guessEntered"
   />
 </template>
