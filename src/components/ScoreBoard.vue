@@ -24,9 +24,25 @@ async function getBaseWord() {
 </script>
 
 <template>
-  <button @click="startNewGame">New Game</button>
-  <button @click="endGame">Reveal Answers</button>
+  <div class="button-container">
+    <button @click="startNewGame" class="game-button">New Game</button>
+    <button @click="endGame" class="game-button">Reveal Answers</button>
+  </div>
   <h2>
     Your word is: <b>{{ baseWord }}</b>
   </h2>
 </template>
+
+<style>
+.button-container {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  padding: 0;
+  margin: 0;
+}
+
+.game-button {
+  width: 10rem; /* Or whatever */
+}
+</style>

@@ -17,5 +17,12 @@ function guessEntered() {
     placeholder="Press enter to submit"
     id="guess"
     @keyup.enter="guessEntered"
+    class="guess-input"
   />
 </template>
+
+<style>
+.guess-input {
+  width: 10rem;
+}
+</style>

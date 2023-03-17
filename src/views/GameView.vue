@@ -24,13 +24,22 @@ function endGame() {
 </script>
 
 <template>
-  <h1>Guess the Synonyms</h1>
-  <p>Guess as many synonyms as you can.</p>
-  <ScoreBoard @start-new-game="startGame" @end-game="endGame" />
-  <GuessInput @guess-entered="updateLastGuess" />
-  <SynonymList
-    :last-guess="lastGuess"
-    :base-word="baseWord"
-    :game-ended="!gameInProgress"
-  />
+  <div class="container">
+    <h1>Guess the Synonyms</h1>
+    <p>Guess as many synonyms as you can.</p>
+    <ScoreBoard @start-new-game="startGame" @end-game="endGame" />
+    <GuessInput @guess-entered="updateLastGuess" />
+    <SynonymList
+      :last-guess="lastGuess"
+      :base-word="baseWord"
+      :game-ended="!gameInProgress"
+    />
+  </div>
 </template>
+
+<style>
+.container {
+  display: flex;
+  flex-direction: column;
+}
+</style>
