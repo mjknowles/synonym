@@ -1,12 +1,30 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const emit = defineEmits(["startNewGame", "endGame"]);
+const props = defineProps(["possibleAnswers", "correctGuesses"]);
+
 const baseWord = ref<string>("");
+const possible = ref<number>(0);
+const answered = ref<number>(0);
 
 onMounted(async () => {
   await startNewGame();
 });
+
+watch(
+  () => props.possibleAnswers,
+  (possibleAnswers: number) => {
+    possible.value = possibleAnswers;
+  }
+);
+
+watch(
+  () => props.correctGuesses,
+  (correctGuesses: number) => {
+    answered.value = correctGuesses;
+  }
+);
 
 async function startNewGame() {
   baseWord.value = await getBaseWord();
@@ -31,6 +49,14 @@ async function getBaseWord() {
   <h2>
     Your word is: <b>{{ baseWord }}</b>
   </h2>
+  <h3>
+    Score:
+    <b
+      >{{ possible > 0 ? answered : "*" }}/{{
+        possible > 0 ? possible : "*"
+      }}</b
+    >
+  </h3>
 </template>
 
 <style>

@@ -6,12 +6,14 @@ import axios from "axios";
 const synonyms = ref<{ [key: string]: Synonym }>({});
 const props = defineProps(["lastGuess", "baseWord", "gameEnded"]);
 var gameEnded = ref<boolean>(false);
+const emit = defineEmits(["synonymsAcquired", "correctGuessEntered"]);
 
 watch(
   () => props.lastGuess,
   (newGuess: string) => {
     if (!synonyms.value[newGuess]) return;
     synonyms.value[newGuess].guessed = true;
+    emit("correctGuessEntered");
   }
 );
 
@@ -20,9 +22,12 @@ watch(
   async (baseWord: string) => {
     synonyms.value = {};
     gameEnded.value = false;
+    let symList: Synonym[] = [];
     (await getSynonyms(baseWord)).forEach((s) => {
       synonyms.value[s.word] = s;
+      symList.push(s);
     });
+    emit("synonymsAcquired", symList);
   }
 );
 

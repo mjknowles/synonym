@@ -14,18 +14,21 @@ function guessEntered() {
 </script>
 
 <template>
-  <label for="guess">Your Guess:</label>
-  <input
-    v-model="guess"
-    placeholder="Press enter to submit"
-    id="guess"
-    @keyup.enter="guessEntered"
-    class="guess-input"
-  />
+  <div style="display: flex; flex-direction: row; align-items: center">
+    <label class="guess-prompt" for="guess">Your Guess:</label>
+    <input
+      v-model="guess"
+      placeholder="Press enter to submit"
+      id="guess"
+      @keyup.enter="guessEntered"
+      class="guess-input"
+    />
+  </div>
 </template>
 
 <style>
 .guess-input {
   width: 10rem;
+  margin-left: 0.5rem;
 }
 </style>
