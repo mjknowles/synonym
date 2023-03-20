@@ -9,7 +9,6 @@ var baseWord = ref("");
 var gameInProgress = ref(false);
 
 function updateLastGuess(guess: string) {
-  alert(`guess received: ${guess}, gameInProgress: ${gameInProgress.value}`);
   if (!gameInProgress.value) return;
   lastGuess.value = guess;
 }
