@@ -10,7 +10,10 @@ var gameEnded = ref<boolean>(false);
 watch(
   () => props.lastGuess,
   (newGuess: string) => {
+    alert(`${newGuess} received`);
     if (!synonyms.value[newGuess]) return;
+    alert(`${newGuess} present`);
+    alert(`guess status: ${synonyms.value[newGuess].guessed}`);
     synonyms.value[newGuess].guessed = true;
     alert(`${synonyms.value[newGuess].guessed} ${gameEnded.value}`);
   }
