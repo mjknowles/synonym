@@ -10,6 +10,7 @@ var gameEnded = ref<boolean>(false);
 watch(
   () => props.lastGuess,
   (newGuess: string) => {
+    alert(`new guess: ${newGuess}`);
     if (!synonyms.value[newGuess]) return;
     synonyms.value[newGuess].guessed = true;
   }
