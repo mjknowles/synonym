@@ -19,7 +19,7 @@ function guessEntered() {
     v-model="guess"
     placeholder="Press enter to submit"
     id="guess"
-    @keydown.enter="guessEntered"
+    @keyup.enter="guessEntered"
     class="guess-input"
   />
 </template>
