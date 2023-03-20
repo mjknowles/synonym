@@ -5,7 +5,9 @@ const emit = defineEmits(["guessEntered"]);
 const guess = ref("");
 
 function guessEntered() {
-  emit("guessEntered", guess.value);
+  const word = guess.value.replace(" ", "");
+  if (word == "") return;
+  emit("guessEntered", word);
   guess.value = "";
 }
 </script>
@@ -16,7 +18,7 @@ function guessEntered() {
     v-model="guess"
     placeholder="Press enter to submit"
     id="guess"
-    @keyup.enter="guessEntered"
+    @keydown.enter="guessEntered"
     class="guess-input"
   />
 </template>
