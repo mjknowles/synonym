@@ -5,7 +5,8 @@ const emit = defineEmits(["guessEntered"]);
 const guess = ref("");
 
 function guessEntered() {
-  const word = guess.value.replace(" ", "");
+  let word = guess.value.replace(" ", "");
+  word = word.toLocaleLowerCase();
   if (word == "") return;
   emit("guessEntered", word);
   guess.value = "";
