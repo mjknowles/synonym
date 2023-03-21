@@ -4,9 +4,10 @@ import { ref } from "vue";
 import GuessInput from "@/components/GuessInput.vue";
 import ScoreBoard from "@/components/ScoreBoard.vue";
 import type { Synonym } from "@/components/synonym";
+import type { Stem } from "@/components/stem";
 
 var lastGuess = ref("");
-var baseWord = ref("");
+var stem = ref<Stem>({ word: "", functionalLabel: "" });
 var gameInProgress = ref(false);
 var correct = ref(0);
 var possible = ref(0);
@@ -16,11 +17,11 @@ function updateLastGuess(guess: string) {
   lastGuess.value = guess;
 }
 
-function startGame(base: string) {
+function startGame(stemWord: Stem) {
   correct.value = 0;
   possible.value = 0;
   gameInProgress.value = true;
-  baseWord.value = base;
+  stem.value = stemWord;
 }
 
 function endGame() {
@@ -49,7 +50,7 @@ function synonymsAcquired(synonyms: Synonym[]) {
     <GuessInput @guess-entered="updateLastGuess" />
     <SynonymList
       :last-guess="lastGuess"
-      :base-word="baseWord"
+      :stem="stem"
       :game-ended="!gameInProgress"
       @correct-guess-entered="correctGuessEntered"
       @synonyms-acquired="synonymsAcquired"

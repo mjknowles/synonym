@@ -2,11 +2,15 @@
 import { onMounted, ref, watch } from "vue";
 import { Synonym } from "./synonym";
 import axios from "axios";
+import type { Stem } from "./stem";
 
 const synonyms = ref<{ [key: string]: Synonym }>({});
-const props = defineProps(["lastGuess", "baseWord", "gameEnded"]);
+const props = defineProps(["lastGuess", "stem", "gameEnded"]);
 var gameEnded = ref<boolean>(false);
 const emit = defineEmits(["synonymsAcquired", "correctGuessEntered"]);
+const synUri =
+  import.meta.env.VITE_SYN_SERV_URI ??
+  "https://synonym-server.azurewebsites.net";
 
 watch(
   () => props.lastGuess,
@@ -18,12 +22,12 @@ watch(
 );
 
 watch(
-  () => props.baseWord,
-  async (baseWord: string) => {
+  () => props.stem,
+  async (stem: Stem) => {
     synonyms.value = {};
     gameEnded.value = false;
     let symList: Synonym[] = [];
-    (await getSynonyms(baseWord)).forEach((s) => {
+    (await getSynonyms(stem.word, stem.functionalLabel)).forEach((s) => {
       synonyms.value[s.word] = s;
       symList.push(s);
     });
@@ -41,19 +45,23 @@ watch(
 
 onMounted(async () => {});
 
-async function getSynonyms(word: string): Promise<Synonym[]> {
+async function getSynonyms(
+  word: string,
+  functionalLabel: string
+): Promise<Synonym[]> {
   try {
-    const response = await axios.get(
-      "https://api.datamuse.com/words?rel_syn=" + word
-    );
-    const synonymsList = response.data
-      .map((synonym: any) => new Synonym(synonym.word))
+    if (word == "") return [];
+    return (
+      await axios.get(
+        `${synUri}/synonym?stem=${word}&functionalLabel=${functionalLabel}`
+      )
+    ).data.syns
+      .map((synonym: string) => new Synonym(synonym))
       .sort((a: Synonym, b: Synonym) =>
         a.word.length === b.word.length
           ? a.word.localeCompare(b.word)
           : a.word.length - b.word.length
       );
-    return synonymsList;
   } catch (error) {
     console.error(error);
     return [];

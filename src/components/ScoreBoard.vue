@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
+import { Stem } from "./stem";
 
 const emit = defineEmits(["startNewGame", "endGame"]);
 const props = defineProps(["possibleAnswers", "correctGuesses"]);
 
-const baseWord = ref<string>("");
+const stem = ref<Stem>({ word: "", functionalLabel: "" });
 const possible = ref<number>(0);
 const answered = ref<number>(0);
 
@@ -27,8 +28,8 @@ watch(
 );
 
 async function startNewGame() {
-  baseWord.value = await getBaseWord();
-  emit("startNewGame", baseWord.value);
+  stem.value = await getBaseWord();
+  emit("startNewGame", stem.value);
 }
 
 async function endGame() {
@@ -36,8 +37,14 @@ async function endGame() {
 }
 
 async function getBaseWord() {
-  const words = ["dog", "house", "nice", "good", "sleep"];
-  return Promise.resolve(words[Math.floor(Math.random() * words.length)]);
+  const stems = [
+    new Stem("dog", "noun"),
+    new Stem("house", "noun"),
+    new Stem("nice", "adjective"),
+    new Stem("good", "adjective"),
+    new Stem("sleep", "verb"),
+  ];
+  return Promise.resolve(stems[Math.floor(Math.random() * stems.length)]);
 }
 </script>
 
@@ -47,7 +54,7 @@ async function getBaseWord() {
     <button @click="endGame" class="game-button">Reveal Answers</button>
   </div>
   <h2>
-    Your word is: <b>{{ baseWord }}</b>
+    Your word is: <b>{{ stem.word }}</b>
   </h2>
   <h3>
     Score:
