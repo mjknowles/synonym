@@ -1,35 +1,51 @@
 <script setup lang="ts">
+import axios from "axios";
 import { onMounted, ref, watch } from "vue";
 import { Stem } from "./stem";
+import { Synonym } from "./synonym";
 
-const emit = defineEmits(["startNewGame", "endGame"]);
-const props = defineProps(["possibleAnswers", "correctGuesses"]);
+const synUri =
+  import.meta.env.VITE_SYN_SERV_URI ??
+  "https://synonym-server.azurewebsites.net";
+
+const emit = defineEmits(["startGame", "endGame", "synonymsAcquired"]);
+const props = defineProps(["lastGuess"]);
 
 const stem = ref<Stem>({ word: "", functionalLabel: "" });
 const possible = ref<number>(0);
 const answered = ref<number>(0);
+const definitions = ref<string>("");
+const synonyms = ref<{ [key: string]: Synonym }>({});
 
 onMounted(async () => {
   await startNewGame();
 });
 
 watch(
-  () => props.possibleAnswers,
-  (possibleAnswers: number) => {
-    possible.value = possibleAnswers;
-  }
-);
-
-watch(
-  () => props.correctGuesses,
-  (correctGuesses: number) => {
-    answered.value = correctGuesses;
+  () => props.lastGuess,
+  (newGuess: string) => {
+    if (!synonyms.value[newGuess]) return;
+    synonyms.value[newGuess].guessed = true;
+    answered.value += 1;
   }
 );
 
 async function startNewGame() {
+  possible.value = 0;
+  answered.value = 0;
+  emit("synonymsAcquired", []);
+  emit("startGame");
   stem.value = await getBaseWord();
-  emit("startNewGame", stem.value);
+  (await getSynonyms(stem.value.word, stem.value.functionalLabel)).forEach(
+    (s) => {
+      synonyms.value[s.word] = s;
+      possible.value += 1;
+    }
+  );
+  emit(
+    "synonymsAcquired",
+    Object.keys(synonyms.value).map((key) => synonyms.value[key])
+  );
 }
 
 async function endGame() {
@@ -46,6 +62,29 @@ async function getBaseWord() {
   ];
   return Promise.resolve(stems[Math.floor(Math.random() * stems.length)]);
 }
+
+async function getSynonyms(
+  word: string,
+  functionalLabel: string
+): Promise<Synonym[]> {
+  try {
+    if (word == "") return [];
+    return (
+      await axios.get(
+        `${synUri}/synonym?stem=${word}&functionalLabel=${functionalLabel}`
+      )
+    ).data.syns
+      .map((synonym: string) => new Synonym(synonym))
+      .sort((a: Synonym, b: Synonym) =>
+        a.word.length === b.word.length
+          ? a.word.localeCompare(b.word)
+          : a.word.length - b.word.length
+      );
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
 </script>
 
 <template>
@@ -56,6 +95,11 @@ async function getBaseWord() {
   <h2>
     Your word is: <b>{{ stem.word }}</b>
   </h2>
+  <h2>Definition(s):</h2>
+  <li v-for="(definition, index) in definitions" :key="index">
+    {{ definition }}
+  </li>
+
   <h3>
     Score:
     <b
