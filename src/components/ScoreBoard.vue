@@ -14,7 +14,7 @@ const props = defineProps(["lastGuess"]);
 const stem = ref<Stem>({ word: "", functionalLabel: "" });
 const possible = ref<number>(0);
 const answered = ref<number>(0);
-const definitions = ref<string>("");
+const definitions = ref<string[]>([]);
 const synonyms = ref<{ [key: string]: Synonym }>({});
 
 onMounted(async () => {
@@ -33,15 +33,19 @@ watch(
 async function startNewGame() {
   possible.value = 0;
   answered.value = 0;
+  synonyms.value = {};
   emit("synonymsAcquired", []);
   emit("startGame");
   stem.value = await getBaseWord();
-  (await getSynonyms(stem.value.word, stem.value.functionalLabel)).forEach(
-    (s) => {
-      synonyms.value[s.word] = s;
-      possible.value += 1;
-    }
+  const synResp = await getSynonyms(
+    stem.value.word,
+    stem.value.functionalLabel
   );
+  synResp.synonyms.forEach((s) => {
+    synonyms.value[s.word] = s;
+    possible.value += 1;
+  });
+  definitions.value = synResp.definitions;
   emit(
     "synonymsAcquired",
     Object.keys(synonyms.value).map((key) => synonyms.value[key])
@@ -66,23 +70,25 @@ async function getBaseWord() {
 async function getSynonyms(
   word: string,
   functionalLabel: string
-): Promise<Synonym[]> {
+): Promise<{ definitions: string[]; synonyms: Synonym[] }> {
   try {
-    if (word == "") return [];
-    return (
-      await axios.get(
-        `${synUri}/synonym?stem=${word}&functionalLabel=${functionalLabel}`
-      )
-    ).data.syns
-      .map((synonym: string) => new Synonym(synonym))
-      .sort((a: Synonym, b: Synonym) =>
-        a.word.length === b.word.length
-          ? a.word.localeCompare(b.word)
-          : a.word.length - b.word.length
-      );
+    if (word == "") return { definitions: [], synonyms: [] };
+    const resp = await axios.get(
+      `${synUri}/synonym?stem=${word}&functionalLabel=${functionalLabel}`
+    );
+    return {
+      definitions: resp.data.definitions,
+      synonyms: resp.data.syns
+        .map((synonym: string) => new Synonym(synonym))
+        .sort((a: Synonym, b: Synonym) =>
+          a.word.length === b.word.length
+            ? a.word.localeCompare(b.word)
+            : a.word.length - b.word.length
+        ),
+    };
   } catch (error) {
     console.error(error);
-    return [];
+    return { definitions: [], synonyms: [] };
   }
 }
 </script>
@@ -93,7 +99,7 @@ async function getSynonyms(
     <button @click="endGame" class="game-button">Reveal Answers</button>
   </div>
   <h2>
-    Your word is: <b>{{ stem.word }}</b>
+    Your word is: <b>{{ stem.word }}</b> <i>({{ stem.functionalLabel }})</i>
   </h2>
   <h2>Definition(s):</h2>
   <li v-for="(definition, index) in definitions" :key="index">
