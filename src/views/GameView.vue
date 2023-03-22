@@ -63,13 +63,9 @@ ul {
   display: flex;
   flex-wrap: wrap;
   list-style-type: none;
-  gap: 10px;
+  gap: 1rem;
   margin: 0;
   padding: 0;
-}
-
-li {
-  flex: 1 1 auto;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 </style>
