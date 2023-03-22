@@ -37,17 +37,19 @@ function endGame() {
       :last-guess="lastGuess"
     />
     <GuessInput @guess-entered="updateLastGuess" />
-    <li
-      v-for="synonym in synonyms"
-      :key="synonym.word"
-      :style="{ fontWeight: synonym.guessed ? 'normal' : 'bold' }"
-    >
-      {{
-        synonym.guessed || !gameInProgress
-          ? synonym.word
-          : "-".repeat(synonym.word.length)
-      }}
-    </li>
+    <ul>
+      <li
+        v-for="synonym in synonyms"
+        :key="synonym.word"
+        :style="{ fontWeight: synonym.guessed ? 'normal' : 'bold' }"
+      >
+        {{
+          synonym.guessed || !gameInProgress
+            ? synonym.word
+            : "-".repeat(synonym.word.length)
+        }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -55,5 +57,19 @@ function endGame() {
 .container {
   display: flex;
   flex-direction: column;
+}
+
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  flex: 1 1 auto;
+  justify-content: space-evenly;
 }
 </style>
