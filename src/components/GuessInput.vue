@@ -1,32 +1,22 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
-const emit = defineEmits(["guessEntered"]);
-const guess = ref("");
-
-function guessEntered() {
-  let word = guess.value.replace(" ", "");
-  word = word.toLocaleLowerCase();
-  if (word == "") return;
-  emit("guessEntered", word);
-  guess.value = "";
-}
+const props = defineProps(["wordInProgress"]);
 </script>
 
 <template>
   <div>
     <input
-      v-model="guess"
-      placeholder="Press enter to submit"
-      id="guess"
-      @keyup.enter="guessEntered"
-      class="guess-input"
+      :value="props.wordInProgress"
+      placeholder="Enter your guess using the buttons below"
+      id="wordInProgress"
+      class="wordInProgress-input"
+      :readonly="true"
+      tabindex="-1"
     />
   </div>
 </template>
 
 <style>
-.guess-input {
+.wordInProgress-input {
   font-size: 24px;
   box-sizing: border-box;
   width: 100%;

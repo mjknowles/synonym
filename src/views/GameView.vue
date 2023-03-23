@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import GuessInput from "@/components/GuessInput.vue";
+import WordleKeyboard from "@/components/WordleKeyboard.vue";
 import ScoreBoard from "@/components/ScoreBoard.vue";
 import type { Synonym } from "@/components/synonym";
 
 var lastGuess = ref("");
+var wordInProgress = ref("");
 var gameInProgress = ref(false);
 const synonyms = ref<Synonym[]>([]);
-
-function updateLastGuess(guess: string) {
-  if (!gameInProgress.value) return;
-  lastGuess.value = guess;
-}
 
 function synonymsAcquired(syns: Synonym[]) {
   synonyms.value = syns;
@@ -23,6 +20,25 @@ function startGame() {
 
 function endGame() {
   gameInProgress.value = false;
+}
+
+function handleLetterSelection(letter: string) {
+  if (!gameInProgress.value) return;
+  wordInProgress.value += letter;
+}
+
+function handleLetterDeleted() {
+  if (!gameInProgress.value || wordInProgress.value.length == 0) return;
+  wordInProgress.value = wordInProgress.value.slice(
+    0,
+    wordInProgress.value.length - 1
+  );
+}
+
+function handleSubmit() {
+  if (!gameInProgress.value) return;
+  lastGuess.value = wordInProgress.value;
+  wordInProgress.value = "";
 }
 </script>
 
@@ -51,7 +67,12 @@ function endGame() {
         </li>
       </ul>
     </div>
-    <GuessInput class="guess-input" @guess-entered="updateLastGuess" />
+    <GuessInput class="guess-input" :word-in-progress="wordInProgress" />
+    <WordleKeyboard
+      @letter-selected="handleLetterSelection"
+      @letter-deleted="handleLetterDeleted"
+      @submit-pressed="handleSubmit"
+    ></WordleKeyboard>
   </div>
 </template>
 
@@ -80,9 +101,6 @@ ul {
 }
 
 .guess-input {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
   box-sizing: border-box;
 }
 </style>
