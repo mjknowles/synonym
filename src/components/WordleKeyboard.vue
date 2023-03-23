@@ -120,6 +120,7 @@ function selectLetter(letter: string) {
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
+          class="icon"
         >
           <path
             stroke-linecap="round"
@@ -144,6 +145,7 @@ function selectLetter(letter: string) {
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
+          class="icon"
         >
           <path
             stroke-linecap="round"
@@ -200,5 +202,10 @@ function selectLetter(letter: string) {
 .submit-key:hover {
   background-color: #003166;
   color: #333;
+}
+
+.icon {
+  width: 100%;
+  height: 100%;
 }
 </style>
