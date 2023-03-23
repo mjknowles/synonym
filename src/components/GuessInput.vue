@@ -14,8 +14,7 @@ function guessEntered() {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: row; align-items: center">
-    <label class="guess-prompt" for="guess">Your Guess:</label>
+  <div>
     <input
       v-model="guess"
       placeholder="Press enter to submit"
@@ -28,7 +27,8 @@ function guessEntered() {
 
 <style>
 .guess-input {
-  width: 10rem;
-  margin-left: 0.5rem;
+  font-size: 24px;
+  box-sizing: border-box;
+  width: 100%;
 }
 </style>
