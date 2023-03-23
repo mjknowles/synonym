@@ -101,7 +101,6 @@ function selectLetter(letter: string) {
       </div>
     </div>
     <div class="keyboard-row">
-      <div class="keyboard-key" @click="selectLetter('-')">-</div>
       <div
         v-for="letter in letters.slice(10, 19)"
         :key="letter"
@@ -110,16 +109,9 @@ function selectLetter(letter: string) {
       >
         {{ letter }}
       </div>
+      <div class="keyboard-key" @click="selectLetter('-')">-</div>
     </div>
     <div class="keyboard-row">
-      <div
-        v-for="letter in letters.slice(19, 27)"
-        :key="letter"
-        class="keyboard-key"
-        @click="selectLetter(letter)"
-      >
-        {{ letter }}
-      </div>
       <div class="keyboard-key" @click="selectLetter('Backspace')">
         <svg
           fill="none"
@@ -135,6 +127,14 @@ function selectLetter(letter: string) {
             d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z"
           ></path>
         </svg>
+      </div>
+      <div
+        v-for="letter in letters.slice(19, 27)"
+        :key="letter"
+        class="keyboard-key"
+        @click="selectLetter(letter)"
+      >
+        {{ letter }}
       </div>
       <div class="keyboard-key submit-key" @click="selectLetter('Enter')">
         <svg
@@ -161,27 +161,30 @@ function selectLetter(letter: string) {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  gap: 4px;
 }
 
 .keyboard-row {
   display: flex;
   justify-content: center;
+  align-content: space-between;
+  gap: 4px;
 }
 
 .keyboard-key {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
-  margin: 10px;
-  border-radius: 50%;
+  flex: 1 1 auto;
+  border-radius: 4px;
   font-size: 1.5rem;
   cursor: pointer;
   background-color: #f2f2f2;
   color: #333;
   transition: all 0.3s ease;
+  height: 58px;
+  width: 35px;
 }
 
 .keyboard-key:hover {
