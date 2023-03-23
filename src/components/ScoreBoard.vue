@@ -57,14 +57,8 @@ async function endGame() {
 }
 
 async function getBaseWord() {
-  const stems = [
-    new Stem("dog", "noun"),
-    new Stem("house", "noun"),
-    new Stem("nice", "adjective"),
-    new Stem("good", "adjective"),
-    new Stem("sleep", "verb"),
-  ];
-  return Promise.resolve(stems[Math.floor(Math.random() * stems.length)]);
+  const resp = await axios.get(`${synUri}/stem`);
+  return new Stem(resp.data.stem, resp.data.partOfSpeech);
 }
 
 async function getSynonyms(
