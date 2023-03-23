@@ -58,9 +58,10 @@ function endGame() {
 <style>
 .outer-container {
   position: relative;
+  max-width: 960px;
   margin: auto;
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 
 .info-container {
