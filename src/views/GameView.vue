@@ -53,6 +53,13 @@ function handleSubmit() {
         @synonyms-acquired="synonymsAcquired"
         :last-guess="lastGuess"
       />
+      <GuessInput class="guess-input" :word-in-progress="wordInProgress" />
+      <WordleKeyboard
+        class="keyboard"
+        @letter-selected="handleLetterSelection"
+        @letter-deleted="handleLetterDeleted"
+        @submit-pressed="handleSubmit"
+      ></WordleKeyboard>
       <ul>
         <li
           v-for="synonym in synonyms"
@@ -67,12 +74,6 @@ function handleSubmit() {
         </li>
       </ul>
     </div>
-    <GuessInput class="guess-input" :word-in-progress="wordInProgress" />
-    <WordleKeyboard
-      @letter-selected="handleLetterSelection"
-      @letter-deleted="handleLetterDeleted"
-      @submit-pressed="handleSubmit"
-    ></WordleKeyboard>
   </div>
 </template>
 
@@ -95,12 +96,17 @@ ul {
   flex-wrap: wrap;
   list-style-type: none;
   gap: 1rem;
-  margin: 0;
+  margin: 1rem 0 0 0;
   padding: 0;
   justify-content: space-between;
 }
 
 .guess-input {
   box-sizing: border-box;
+  margin-top: 1rem;
+}
+
+.keyboard {
+  margin-top: 1rem;
 }
 </style>

@@ -122,4 +122,8 @@ async function getSynonyms(
 .game-button {
   width: 10rem; /* Or whatever */
 }
+
+h3 {
+  margin-top: 1rem;
+}
 </style>
