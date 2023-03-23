@@ -10,5 +10,11 @@ import { RouterView } from "vue-router";
 #app {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
+  height: 100%;
+}
+
+html,
+body {
+  height: 100%;
 }
 </style>
