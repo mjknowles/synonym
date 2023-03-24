@@ -46,7 +46,6 @@ function handleSubmit() {
   <div class="outer-container">
     <div class="info-container">
       <h1>Guess the Synonyms</h1>
-      <p>Guess as many synonyms as you can.</p>
       <ScoreBoard
         @end-game="endGame"
         @start-game="startGame"

@@ -6,7 +6,7 @@ const props = defineProps(["wordInProgress"]);
   <div>
     <input
       :value="props.wordInProgress"
-      placeholder="Enter your guess using the buttons below"
+      placeholder="Your guess"
       id="wordInProgress"
       class="wordInProgress-input"
       :readonly="true"
